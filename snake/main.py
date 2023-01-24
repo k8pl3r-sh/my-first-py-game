@@ -17,6 +17,8 @@ screen = pg.display.set_mode([WINDOW] * 2)
 clock = pg.time.Clock()
 dirs = {pg.K_z: 1, pg.K_q: 1, pg.K_s: 1, pg.K_d: 1,}
 
+pygame.display.set_caption("Snake EC2") #Title of the window
+
 while True:
     for event in pg.event.get():
         if event.type == pg.QUIT:

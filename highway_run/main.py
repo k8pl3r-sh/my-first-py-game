@@ -41,7 +41,7 @@ DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT)) # Window of 
 # top-left corner is the coordinates (0, 0), and bottom right corner is (300,300) in our case
 # customize window later (changing title and default icon): https://coderslegacy.com/python/how-to-change-the-pygame-icon/
 DISPLAYSURF.fill(WHITE)
-pygame.display.set_caption("Game") #Title of the window
+pygame.display.set_caption("Highway run") #Title of the window
 
 
 #### Classes ###
@@ -143,7 +143,7 @@ while True:
 
             DISPLAYSURF.fill(RED) # Fill the screen with red if collision
             DISPLAYSURF.blit(game_over, (30,250))
-            
+
             pygame.display.update()
             for entity in all_sprites:
                 entity.kill() #remove the sprite from the group
@@ -193,6 +193,6 @@ print(object1.colliderect(object2))
 # multiple ennemy spawning after a certain period of time (similar to how we increase speed after a set period of time)
 # Adding audio: background (DONE), movement sound
 # Multiple lives
-# Variations in the shape and size of the ennemy
+# Variations in the shape and size of the ennemy & multiples subclasses (trucks...)
 
 # Me: Menu to restart/quit the game

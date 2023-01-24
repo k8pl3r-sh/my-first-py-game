@@ -1,16 +1,12 @@
-#!/bin/python3
-
-# pip install pygame, pygame-menu
-
-# Imports
-import sys # for quitting the script to avoid IDE bug
-import random, time
-import pygame
-from pygame.locals import * # avoid using pygame.locals prefix
-
-pygame.init()  # initialize pygame engine
-
-
+from time import sleep
+import pygame, random, time
+import pygame_menu
+from pygame_menu import themes
+from pygame.locals import *
+ 
+pygame.init()
+surface = pygame.display.set_mode((400, 600))
+ 
 # Create our colors for the game: predefined colors
 BLUE  = (0, 0, 255)
 RED   = (255, 0, 0)
@@ -108,91 +104,38 @@ INC_SPEED = pygame.USEREVENT + 1 # user event to increase difficulty
 pygame.time.set_timer(INC_SPEED, 1000) # call the INC_SPEED event every 1s
 
 
-# pygame mixer
-pygame.mixer.music.load('background.wav') # load the music (then play it with: pygame.mixer.music.play(-1))
-# -1 indefinitely; 0 or nothing: once;  x times -> repeated x times
-# pygame.mixer.music.stop() to stop the music
+def set_difficulty(value, difficulty):
+    print(value)
+    print(difficulty)
+ 
+def start_the_game():
+    pass
+ 
+def level_menu():
+    mainmenu._open(level)
+ 
+ 
+mainmenu = pygame_menu.Menu('Welcome', 400, 600, theme=themes.THEME_SOLARIZED)
+mainmenu.add.text_input('Name: ', default='username', maxchar=20)
+mainmenu.add.button('Play', start_the_game)
+mainmenu.add.button('Levels', level_menu)
+mainmenu.add.button('Quit', pygame_menu.events.EXIT)
+ 
+level = pygame_menu.Menu('Select a Difficulty', 400, 600, theme=themes.THEME_BLUE)
+level.add.selector('Difficulty :', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
+ 
+# mainmenu.mainloop(surface)
+# Can be replaced by:
 
-### Game loop ###
 while True:
-    for event in pygame.event.get(): # catch all events
-        if event.type == INC_SPEED:
-              SPEED += 2              
-        if event.type == QUIT:
-            pygame.quit() # Close pygame window
-            sys.exit() # Close python script
-    
-    pygame.mixer.music.play(-1)
-    #DISPLAYSURF.fill(WHITE)
-    DISPLAYSURF.blit(background, (0,0))
-    scores = font_small.render(str(SCORE), True, BLACK)
-    DISPLAYSURF.blit(scores, (10,10))
-
-
-    #Moves and Re-draws all Sprites
-    for entity in all_sprites:
-        DISPLAYSURF.blit(entity.image, entity.rect) # interest of grouping: move and redraw in 3 lines
-        entity.move()
-
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            exit()
  
-    #To be run if collision occurs between Player and Enemy: COLLISIONS
-    if pygame.sprite.spritecollideany(P1, enemies): #function to check collision btw a sprite and sprite group
-            pygame.mixer.music.stop()
-            pygame.mixer.Sound('crash.wav').play()
-            time.sleep(0.5)
-
-            DISPLAYSURF.fill(RED) # Fill the screen with red if collision
-            DISPLAYSURF.blit(game_over, (30,250))
-            
-            pygame.display.update()
-            for entity in all_sprites:
-                entity.kill() #remove the sprite from the group
-            time.sleep(2)
-            pygame.quit()
-            sys.exit()
-         
-    pygame.display.update() # Changes are not implemented until this
+    if mainmenu.is_enabled():
+        mainmenu.update(events)
+        mainmenu.draw(surface)
+ 
+    pygame.display.update()
     FramePerSec.tick(FPS)
-
-
-
-
-### DOCUMENTATION ###
-# pygame event when a user performs a specific action: create custom events: https://coderslegacy.com/python/pygame-userevents/
-
-# attributes of an object: type,...
-
-# pygame colors: RGB: 256x256x256=16 millions
-
-# Rects and collision detection:
-# collision of entities -> attack/... https#://coderslegacy.com/python/pygame-rect-tutorial/
-""" Example code to  check collisions
-object1 = pygame.Rect((20, 50), (50, 100))
-object2 = pygame.Rect((10, 10), (100, 100))
- 
-print(object1.colliderect(object2))
-"""
-# There is another trick we can use to automatically create a Rect based off an image’s dimensions. We will explore this later on in this Pygame tutorial.
-
-
-# Optimize and speed up the game: https://coderslegacy.com/improving-speed-performance-in-pygame/
-
-# Classes are very important to avoid rebuilding every elements
-
-# Fonts use the file .ttf, which stands for True Type File: https://coderslegacy.com/python/pygame-font/
-
-# STEPS:
-# 0 - Brainstorm the idea to have clear steps and needs
-# 1 - Initialize the code, and architecture of the project (script + folders ...), nomenclature TODO etc...
-# 2 - Build the game, classes and methods
-# 3 - Add background, sound, fonts, scoring ...
-# 4 - Optimize
-
-
-# TODO: 
-# multiple ennemy spawning after a certain period of time (similar to how we increase speed after a set period of time)
-# Adding audio: background (DONE), movement sound
-# Multiple lives
-# Variations in the shape and size of the ennemy
-
-# Me: Menu to restart/quit the game
